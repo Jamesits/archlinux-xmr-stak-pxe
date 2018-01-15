@@ -10,15 +10,20 @@ abs_path() {
 iso="archlinux-2018.01.01-x86_64.iso"
 arch="x86_64"
 workdir="build"
+output_file="archlinux-miner.squashfs"
 
 sudo rm -rf $workdir || true
 mkdir $workdir
-7z x -o$workdir $iso
-cd $workdir
+7z x -o$workdir/iso $iso
+mv $workdir/iso/arch/boot/$arch/vmlinuz $workdir/vmlinuz
+mv $workdir/iso/arch/boot/intel_ucode.img $workdir/intel_ucode.img
+mv $workdir/iso/arch/boot/$arch/archiso.img $workdir/initrd.img
+mv $workdir/iso/arch/$arch/airootfs.sfs $workdir/archlinux.squashfs
 
-pushd arch/$arch
-sudo unsquashfs airootfs.sfs
-cat <<-EOF | sudo arch-chroot squashfs-root/ /bin/bash
+sudo unsquashfs -f -d $workdir/squashfs-root $workdir/archlinux.squashfs
+
+cat config/mirrorlist $workdir/squashfs-root/etc/pacman.d/mirrorlist > $workdir/squashfs-root/etc/pacman.d/mirrorlist
+cat <<-EOF | sudo $workdir/squashfs-root/bin/arch-chroot $workdir/squashfs-root/ /bin/bash
 	echo "pacman-key takes awhile sometimes, please be patient..."
 	pacman-key --init 
 	pacman-key --populate archlinux
@@ -34,20 +39,18 @@ cat <<-EOF | sudo arch-chroot squashfs-root/ /bin/bash
 	mkdir -p /root/.ssh
 	chmod 700 /root/.ssh
 	
-	# Avahi
-	#pacman --noconfirm -S avahi dbus
-	#ln -s /usr/lib/systemd/system/avahi-daemon.service /etc/systemd/system/multi-user.target.wants/avahi-daemon.service
-	#ln -s /usr/lib/systemd/system/dbus.service /etc/systemd/system/multi-user.target.wants/dbus.service
-	
-	LANG=C pacman -Sl | awk '/\[installed\]$/ {print $1 "/" $2 "-" $3}' > /pkglist.txt
+	# Clear package cache
 	pacman -Scc --noconfirm
 	EOF
-cp squashfs-root/pkglist.txt ../pkglist.$arch.txt
+
+# cp squashfs-root/pkglist.txt ../pkglist.$arch.txt
 # Copy authorized_keys
 # sudo cp $asset_dir/authorized_keys squashfs-root/root/.ssh/authorized_keys
 # sudo chmod 600 squashfs-root/root/.ssh/authorized_keys
 
-# sudo rm airootfs.sfs
-sudo mksquashfs squashfs-root airootfs.sfs
-# sudo rm -rf squashfs-root
+sudo mksquashfs $workdir/squashfs-root $output_file
+
+sudo rm -rf $workdir/squashfs-root
+sudo rm $workdir/archlinux.squashfs
+sudo rm -rf $workdir/iso
 
