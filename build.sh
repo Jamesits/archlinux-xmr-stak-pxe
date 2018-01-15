@@ -12,6 +12,11 @@ arch="x86_64"
 workdir="build"
 output_file="archlinux-miner.squashfs"
 
+if [[ $EUID -ne 0 ]]; then
+	echo "This script must be run as root" 
+	exit 1
+fi
+
 sudo rm -rf $workdir || true
 mkdir $workdir
 7z x -o$workdir/iso $iso
@@ -20,10 +25,10 @@ mv $workdir/iso/arch/boot/intel_ucode.img $workdir/intel_ucode.img
 mv $workdir/iso/arch/boot/$arch/archiso.img $workdir/initrd.img
 mv $workdir/iso/arch/$arch/airootfs.sfs $workdir/archlinux.squashfs
 
-sudo unsquashfs -f -d $workdir/squashfs-root $workdir/archlinux.squashfs
+unsquashfs -f -d $workdir/squashfs-root $workdir/archlinux.squashfs
 
 cat config/mirrorlist $workdir/squashfs-root/etc/pacman.d/mirrorlist > $workdir/squashfs-root/etc/pacman.d/mirrorlist
-cat <<-EOF | sudo $workdir/squashfs-root/bin/arch-chroot $workdir/squashfs-root/ /bin/bash
+cat <<-EOF | $workdir/squashfs-root/bin/arch-chroot $workdir/squashfs-root/ /bin/bash
 	echo "pacman-key takes awhile sometimes, please be patient..."
 	pacman-key --init 
 	pacman-key --populate archlinux
@@ -48,9 +53,9 @@ cat <<-EOF | sudo $workdir/squashfs-root/bin/arch-chroot $workdir/squashfs-root/
 # sudo cp $asset_dir/authorized_keys squashfs-root/root/.ssh/authorized_keys
 # sudo chmod 600 squashfs-root/root/.ssh/authorized_keys
 
-sudo mksquashfs $workdir/squashfs-root $output_file
+mksquashfs $workdir/squashfs-root $output_file
 
-sudo rm -rf $workdir/squashfs-root
-sudo rm $workdir/archlinux.squashfs
-sudo rm -rf $workdir/iso
+rm -rf $workdir/squashfs-root
+rm $workdir/archlinux.squashfs
+rm -rf $workdir/iso
 
