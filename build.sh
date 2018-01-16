@@ -12,63 +12,6 @@ arch="x86_64"
 workdir="build"
 output_dir="release"
 
-read -r -d '' miner_sysctl <<EOF
-vm.nr_hugepages = 128
-EOF
-
-read -r -d '' miner_pxe_script <<EOF
-#!/bin/bash
-set -eu
-
-cd /tmp
-lscpu -J > lscpu.txt
-! curl -o config.txt --data "@lscpu.txt" http://192.168.88.16:8000/xmr-stak/config.txt
-! curl -o cpu.txt --data "@lscpu.txt" http://192.168.88.16:8000/xmr-stak/cpu.txt
-
-[ ! -f config.txt ] && ! cp /etc/xmr-stak/config.txt .
-[ ! -f cpu.txt ] && ! cp /etc/xmr-stak/cpu.txt .
-EOF
-
-read -r -d '' miner_service <<EOF
-[Unit]
-Description=xmr-stak miner
-After=network.target
-After=syslog.target
-
-[Install]
-WantedBy=multi-user.target
-Alias=xmr.service
-Alias=miner.service
-
-[Service]
-User=nobody
-Group=nobody
-Type=idle
-PrivateNetwork=false
-CapabilityBoundingSet=CAP_NET_BIND_SERVICE
-AmbientCapabilities=CAP_NET_BIND_SERVICE
-NoNewPrivileges=true
-ProtectSystem=full
-PrivateDevices=true
-ProtectHome=true
-PermissionsStartOnly=false
-WorkingDirectory=/tmp
-Restart=always
-RestartSec=5s
-UMask=007
-# OOMScoreAdjust=-600
-# BlockIOWeight=1000
-PrivateTmp=true
-#LimitNOFILE=16364
-# LimitCore=
-# Nice=-5
-# FailureAction=
-
-# apply user provided config file
-ExecStartPre=-/usr/bin/xmr-stak-pxe
-ExecStart=/usr/bin/xmr-stak
-EOF
-
 if [[ $EUID -ne 0 ]]; then
 	echo "This script must be run as root" 
 	exit 1
@@ -104,11 +47,10 @@ mv $workdir/mirrorlist $workdir/squashfs-root/etc/pacman.d/mirrorlist
 mv $workdir/xmr-stak/bin/xmr-stak $workdir/squashfs-root/usr/bin
 mv $workdir/xmr-stak/bin/libxmr-*.a $workdir/squashfs-root/usr/lib
 mkdir -p $workdir/squashfs-root/etc/xmr-stak
-cp config/{config,cpu}.txt $workdir/squashfs-root/etc/xmr-stak
-echo $miner_sysctl > $workdir/squashfs-root/etc/sysctl.d/miner.conf
-echo $miner_pxe_script > $workdir/squashfs-root/usr/bin/xmr-stak-pxe
-chmod +x $workdir/squashfs-root/usr/bin/xmr-stak-pxe
-echo $miner_service $workdir/squashfs-root/usr/lib/systemd/system/xmr-stak.service
+cp config/config.txt $workdir/squashfs-root/etc/xmr-stak
+cp config/miner.conf $workdir/squashfs-root/etc/sysctl.d
+cp config/xmr-stak-pxe $workdir/squashfs-root/usr/bin
+cp config/xmr-stak.service $workdir/squashfs-root/usr/lib/systemd/system
 
 # setup rootfs
 cat <<-EOF | $workdir/squashfs-root/bin/arch-chroot $workdir/squashfs-root/ /bin/bash
