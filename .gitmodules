@@ -1,3 +1,6 @@
 [submodule "xmr-stak"]
 	path = xmr-stak
 	url = https://github.com/fireice-uk/xmr-stak.git
+[submodule "ipxe"]
+	path = ipxe
+	url = git://git.ipxe.org/ipxe.git

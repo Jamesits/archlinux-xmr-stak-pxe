@@ -24,14 +24,25 @@ mkdir -p $workdir
 # build iPXE
 ! source $basedir/config/pxe.sh
 cat > $workdir/boot.cfg.head <<-EOF
-#!ipxe
-
-set http_root ${pxe_http_root}
-set xmr_http_root ${xmr_stak_http_root}
-EOF
+	#!ipxe
+	
+	set http_root ${pxe_http_root}
+	set xmr_http_root ${xmr_stak_http_root}
+	EOF
 cat $workdir/boot.cfg.head $confdir/boot.cfg > $output_dir/boot.cfg
 
-exit 0
+cat > $workdir/ipxe_embed.ipxe <<-EOF
+	#!ipxe
+	dhcp
+	boot ${pxe_script}
+	EOF
+
+pushd $basedir/ipxe/src
+! git reset --hard
+make bin-x86_64-efi/ipxe.efi EMBED=$workdir/ipxe_embed.ipxe
+cp bin-x86_64-efi/ipxe.efi $output_dir/ipxe.efi
+! git reset --hard
+popd
 
 # build xmr-stak
 pushd $basedir/xmr-stak
