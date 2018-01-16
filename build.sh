@@ -62,6 +62,6 @@ mkdir -p $output_dir/arch/$arch
 mv $workdir/iso/arch/boot/intel_ucode.{img,LICENSE} $output_dir/arch/boot
 mv $workdir/iso/arch/boot/$arch/{vmlinuz,archiso.img} $output_dir/arch/boot/$arch
 mv $workdir/airootfs.sfs $output_dir/arch/$arch
-mv config/boot.cfg $output_dir
+cp config/boot.cfg $output_dir
 
 rm -rf $workdir
