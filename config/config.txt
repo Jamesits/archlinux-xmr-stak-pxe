@@ -13,7 +13,7 @@
  */
 "pool_list" :
 [
-	{"pool_address" : "pool.electroneum.space:5555", "wallet_address" : "etnkGeJXNi3JyEL3FnKiA6gVcBXHevrx5GyyuQXAUivyYYaej3LYaxo1boFtd39PHLF9UDVWaWtzRVnR7ZAXmnEK1QcPYis4HD", "pool_password" : "x", "use_nicehash" : false, "use_tls" : false, "tls_fingerprint" : "", "pool_weight" : 1 },
+	{"pool_address" : "pool.electroneum.space:5555", "wallet_address" : "etnkGeJXNi3JyEL3FnKiA6gVcBXHevrx5GyyuQXAUivyYYaej3LYaxo1boFtd39PHLF9UDVWaWtzRVnR7ZAXmnEK1QcPYis4HD@ARCH-PXE", "pool_password" : "x", "use_nicehash" : false, "use_tls" : false, "tls_fingerprint" : "", "pool_weight" : 1 },
 ],
 
 /*
