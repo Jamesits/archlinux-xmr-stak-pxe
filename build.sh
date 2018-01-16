@@ -20,12 +20,12 @@ fi
 sudo rm -rf $workdir || true
 mkdir -p $workdir
 7z x -o$workdir/iso $iso
-mv $workdir/iso/arch/boot/$arch/vmlinuz $workdir/vmlinuz
-mv $workdir/iso/arch/boot/intel_ucode.img $workdir/intel_ucode.img
-mv $workdir/iso/arch/boot/$arch/archiso.img $workdir/initrd.img
-mv $workdir/iso/arch/$arch/airootfs.sfs $workdir/archlinux.squashfs
+#mv $workdir/iso/arch/boot/$arch/vmlinuz $workdir/vmlinuz
+#mv $workdir/iso/arch/boot/intel_ucode.img $workdir/intel_ucode.img
+#mv $workdir/iso/arch/boot/$arch/archiso.img $workdir/initrd.img
+#mv $workdir/iso/arch/$arch/airootfs.sfs $workdir/archlinux.squashfs
 
-unsquashfs -f -d $workdir/squashfs-root $workdir/archlinux.squashfs
+unsquashfs -f -d $workdir/squashfs-root $workdir/iso/arch/$arch/airootfs.sfs
 
 cat config/mirrorlist $workdir/squashfs-root/etc/pacman.d/mirrorlist > $workdir/mirrorlist
 mv $workdir/mirrorlist $workdir/squashfs-root/etc/pacman.d/mirrorlist
@@ -59,7 +59,7 @@ mksquashfs $workdir/squashfs-root $workdir/airootfs.sfs
 # copy build result to release folder
 mkdir -p $output_dir/arch/boot/$arch
 mkdir -p $output_dir/arch/$arch
-mv $workdir/iso/arch/boot/intel_ucode.{img,license} $output_dir/arch/boot
+mv $workdir/iso/arch/boot/intel_ucode.{img,LICENSE} $output_dir/arch/boot
 mv $workdir/iso/arch/boot/$arch/{vmlinuz,archiso.img} $output_dir/arch/boot/$arch
 mv $workdir/airootfs.sfs $output_dir/arch/$arch
 mv config/boot.cfg $output_dir
