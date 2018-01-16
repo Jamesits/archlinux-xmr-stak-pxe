@@ -2,9 +2,10 @@
 set -euv
 
 cd /tmp
+rm *.txt
 lscpu -J > lscpu.txt
-! curl -o config.txt --data "@lscpu.txt" http://192.168.88.16:8000/xmr-stak/config.txt
-! curl -o cpu.txt --data "@lscpu.txt" http://192.168.88.16:8000/xmr-stak/cpu.txt
+! curl -Lf -o config.txt --data "@lscpu.txt" http://192.168.88.16:8000/xmr-stak/config.txt
+! curl -Lf -o cpu.txt --data "@lscpu.txt" http://192.168.88.16:8000/xmr-stak/cpu.txt
 
 [ ! -f config.txt ] && ! cp /etc/xmr-stak/config.txt .
 [ ! -f cpu.txt ] && ! cp /etc/xmr-stak/cpu.txt .
