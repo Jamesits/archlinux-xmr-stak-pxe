@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import hug
-import requests
 
 @hug.static('/static')
 def my_static_dirs():
