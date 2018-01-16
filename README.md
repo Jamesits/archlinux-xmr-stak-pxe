@@ -2,6 +2,10 @@
 
 Arch linux image with xmr-stak installed. A PXE-and-mine solution for batch deployment.
 
+## Requirements
+
+PXE client need at least 1792GiB RAM. 
+
 ## Usage
 
 Pre-compile:
@@ -20,9 +24,9 @@ Post-compile:
  * copy `release/ipxe.efi` to your DHCP server
  * configure PXE to `ipxe.efi` on your DHCP server
 
-## Build Dependency
+## Build Dependency (on where you execute `build.sh`)
 
-Packages needed to build this (on Ubuntu):
+(Packages name is from Ubuntu 16.04. They may have other names on other distros.)
 
  * p7zip-full
  * squashfs-tools
@@ -33,7 +37,7 @@ Packages needed to build this (on Ubuntu):
  * libssl-dev
  * libhwloc-dev
 
-## Runtime Dependency (on PXE server)
+## Runtime Dependency (on PXE HTTP server)
 
  * python3
  * pip packages: uwsgi hug (install use `sudo -H pip3 install uwsgi hug`)
