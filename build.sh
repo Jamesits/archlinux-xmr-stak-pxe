@@ -94,17 +94,16 @@ cat <<-EOF | $workdir/squashfs-root/bin/arch-chroot $workdir/squashfs-root/ /bin
 	systemctl enable avahi-daemon
 	systemctl enable xmr-stak.service
 	
-	# Create root ssh folder (copy authorized_keys here later)
-	mkdir -p /root/.ssh
-	chmod 700 /root/.ssh
-	
 	# Clear package cache
 	pacman -Scc --noconfirm
 	EOF
 
 # Copy authorized_keys
-# sudo cp $asset_dir/authorized_keys squashfs-root/root/.ssh/authorized_keys
-# sudo chmod 600 squashfs-root/root/.ssh/authorized_keys
+mkdir -p $workdir/squashfs-root/root/.ssh
+! cp $confdir/authorized_keys $workdir/squashfs-root/root/.ssh/authorized_keys
+chown -R root:root $workdir/squashfs/root/.ssh
+chmod 700 $workdir/squashfs-root/root/.ssh
+! chmod 600 $workdir/squashfs-root/root/.ssh/authorized_keys
 
 # build rootfs
 mksquashfs $workdir/squashfs-root $workdir/airootfs.sfs
