@@ -60,7 +60,7 @@ cat <<-EOF | $workdir/squashfs-root/bin/arch-chroot $workdir/squashfs-root/ /bin
 	pacman-key --populate archlinux
 	pacman -Sy
 	
-	pacman --noconfirm -S openssh dbus util-linux gptfdisk avahi hwloc libmicrohttpd lm_sensors i7z curl wget w3m
+	pacman --noconfirm -S openssh avahi hwloc libmicrohttpd lm_sensors i7z w3m
 
 	# fix libmicrohttpd version problem between build and destination device
 	ln -s /usr/lib/libmicrohttpd.so	/usr/lib/libmicrohttpd.so.10
