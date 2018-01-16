@@ -9,8 +9,9 @@ abs_path() {
 
 iso="archlinux-2018.01.01-x86_64.iso"
 arch="x86_64"
-workdir="build"
-output_dir="release"
+confdir="$basedir/config"
+workdir="$basedir/build"
+output_dir="$basedir/release"
 
 if [[ $EUID -ne 0 ]]; then
 	echo "This script must be run as root" 
@@ -21,6 +22,16 @@ fi
 mkdir -p $workdir
 
 # build iPXE
+! source $basedir/config/pxe.sh
+cat > $workdir/boot.cfg.head <<-EOF
+#!ipxe
+
+set http_root ${pxe_http_root}
+set xmr_http_root ${xmr_stak_http_root}
+EOF
+cat $workdir/boot.cfg.head $confdir/boot.cfg > $output_dir/boot.cfg
+
+exit 0
 
 # build xmr-stak
 pushd $basedir/xmr-stak
