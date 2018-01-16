@@ -35,8 +35,8 @@ Packages needed to build this (on Ubuntu):
 
 ## Runtime Dependency (on PXE server)
 
- * python3-pip
- * pip packages: uwsgi hug
+ * python3
+ * pip packages: uwsgi hug (install use `sudo -H pip3 install uwsgi hug`)
 
 ## Donation
 
