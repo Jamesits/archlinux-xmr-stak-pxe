@@ -43,6 +43,8 @@ pushd $basedir/ipxe/src
 ! git reset --hard
 make bin-x86_64-efi/ipxe.efi EMBED=$workdir/ipxe_embed.ipxe
 cp bin-x86_64-efi/ipxe.efi $output_dir/ipxe.efi
+make bin/undionly.kpxe EMBED=$workdir/ipxe_embed.ipxe
+cp bin/undionly.kpxe $output_dir/ipxe.efi
 ! git reset --hard
 popd
 
