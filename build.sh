@@ -35,6 +35,7 @@ cat $workdir/boot.cfg.head $confdir/boot.cfg > $output_dir/boot.cfg
 
 cat > $workdir/ipxe_embed.ipxe <<-EOF
 	#!ipxe
+	prompt --key 0x02 --timeout 2000 Press Ctrl-B to cancel auto boot and launch the iPXE command line... && shell ||
 	dhcp
 	boot ${pxe_script}
 	EOF
