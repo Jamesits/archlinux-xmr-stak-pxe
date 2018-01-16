@@ -17,18 +17,33 @@ if [[ $EUID -ne 0 ]]; then
 	exit 1
 fi
 
-sudo rm -rf $workdir || true
+! rm -rf $workdir
 mkdir -p $workdir
-7z x -o$workdir/iso $iso
-#mv $workdir/iso/arch/boot/$arch/vmlinuz $workdir/vmlinuz
-#mv $workdir/iso/arch/boot/intel_ucode.img $workdir/intel_ucode.img
-#mv $workdir/iso/arch/boot/$arch/archiso.img $workdir/initrd.img
-#mv $workdir/iso/arch/$arch/airootfs.sfs $workdir/archlinux.squashfs
 
+# build iPXE
+
+# build xmr-stak
+pushd $basedir/xmr-stak
+! git reset --hard
+! sed -ie "s/2\.0/0\.0/g" xmrstak/donate-level.hpp
+popd
+mkdir -p $workdir/xmr-stak
+pushd $workdir/xmr-stak
+cmake $basedir/xmr-stak -DXMR-STAK_COMPILE=generic -DCMAKE_LINK_STATIC=ON -DCMAKE_BUILD_TYPE=Release -DMICROHTTPD_ENABLE=ON -DOpenSSL_ENABLE=ON -DCPU_ENABLE=ON -DHWLOC_ENABLE=ON -DOpenCL_ENABLE=OFF -DCUDA_ENABLE=OFF
+make
+popd
+
+# extract iso
+7z x -o$workdir/iso $iso
+
+# extract rootfs
 unsquashfs -f -d $workdir/squashfs-root $workdir/iso/arch/$arch/airootfs.sfs
 
+# set mirror preference
 cat config/mirrorlist $workdir/squashfs-root/etc/pacman.d/mirrorlist > $workdir/mirrorlist
 mv $workdir/mirrorlist $workdir/squashfs-root/etc/pacman.d/mirrorlist
+
+# setup rootfs
 cat <<-EOF | $workdir/squashfs-root/bin/arch-chroot $workdir/squashfs-root/ /bin/bash
 	echo "pacman-key takes awhile sometimes, please be patient..."
 	pacman-key --init 
@@ -54,6 +69,11 @@ cat <<-EOF | $workdir/squashfs-root/bin/arch-chroot $workdir/squashfs-root/ /bin
 # sudo cp $asset_dir/authorized_keys squashfs-root/root/.ssh/authorized_keys
 # sudo chmod 600 squashfs-root/root/.ssh/authorized_keys
 
+# install xmr-stak
+mv $workdir/xmr-stak/bin/xmr-stak $workdir/squashfs-root/usr/bin
+mv $workdir/xmr-stak/bin/libxmr-*.a $workdir/squashfs-root/usr/lib
+
+# build rootfs
 mksquashfs $workdir/squashfs-root $workdir/airootfs.sfs
 
 # copy build result to release folder
@@ -64,4 +84,5 @@ mv $workdir/iso/arch/boot/$arch/{vmlinuz,archiso.img} $output_dir/arch/boot/$arc
 mv $workdir/airootfs.sfs $output_dir/arch/$arch
 cp config/boot.cfg $output_dir
 
+# clear build temp files
 rm -rf $workdir
