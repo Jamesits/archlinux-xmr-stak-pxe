@@ -36,7 +36,6 @@ cat > $workdir/ipxe_embed.ipxe <<-EOF
 	dhcp
 	boot ${pxe_script}
 	EOF
-
 pushd $basedir/ipxe/src
 ! git reset --hard
 make bin-x86_64-efi/ipxe.efi EMBED=$workdir/ipxe_embed.ipxe
@@ -113,7 +112,6 @@ mkdir -p $output_dir/arch/$arch
 mv $workdir/iso/arch/boot/intel_ucode.{img,LICENSE} $output_dir/arch/boot
 mv $workdir/iso/arch/boot/$arch/{vmlinuz,archiso.img} $output_dir/arch/boot/$arch
 mv $workdir/airootfs.sfs $output_dir/arch/$arch
-cp config/boot.cfg $output_dir
 
 # clear build temp files
 rm -rf $workdir
