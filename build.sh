@@ -101,7 +101,7 @@ cat <<-EOF | $workdir/squashfs-root/bin/arch-chroot $workdir/squashfs-root/ /bin
 # Copy authorized_keys
 mkdir -p $workdir/squashfs-root/root/.ssh
 ! cp $confdir/authorized_keys $workdir/squashfs-root/root/.ssh/authorized_keys
-chown -R root:root $workdir/squashfs/root/.ssh
+chown -R root:root $workdir/squashfs-root/root/.ssh
 chmod 700 $workdir/squashfs-root/root/.ssh
 ! chmod 600 $workdir/squashfs-root/root/.ssh/authorized_keys
 
