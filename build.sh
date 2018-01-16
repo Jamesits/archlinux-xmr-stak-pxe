@@ -19,7 +19,9 @@ if [[ $EUID -ne 0 ]]; then
 fi
 
 ! rm -rf $workdir
+! rm -rf $output_dir
 mkdir -p $workdir
+mkdir -p $output_dir
 
 # build iPXE
 ! source $basedir/config/pxe.sh
