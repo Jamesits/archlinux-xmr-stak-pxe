@@ -26,16 +26,20 @@ Post-compile:
 
 ## Build Dependency (on where you execute `build.sh`)
 
-(Packages name is from Ubuntu 16.04. They may have other names on other distros.)
+Ubuntu:
 
- * p7zip-full
- * squashfs-tools
- * git-core
- * cmake
- * build-essential
- * libmicrohttpd-dev
- * libssl-dev
- * libhwloc-dev
+```shell
+apt-get install p7zip-full squashfs-tools git-core cmake build-essential libmicrohttpd-dev libssl-dev libhwloc-dev
+```
+
+OpenSuSE:
+
+(I haven't tested from a clean install, so the following is just for reference)
+
+```shell
+zypper install -t pattern devel_C_C++
+zypper install p7zip squashfs git cmake libmicrohttpd-devel hwloc libssl44
+```
 
 ## Runtime Dependency (on PXE HTTP server)
 
