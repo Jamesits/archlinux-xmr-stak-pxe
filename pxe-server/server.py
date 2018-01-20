@@ -2,8 +2,12 @@
 
 import hug
 
+@hug.static('/xmr-stak')
+def config_stor():
+    return ("config", )
+
 @hug.static('/static')
-def my_static_dirs():
+def pxe_stor():
     return ("release", )
 
 @hug.get("/", output=hug.output_format.text)
