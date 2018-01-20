@@ -77,6 +77,7 @@ cp config/config.txt $workdir/squashfs-root/etc/xmr-stak
 cp config/miner.conf $workdir/squashfs-root/etc/sysctl.d
 cp config/xmr-stak-pxe $workdir/squashfs-root/usr/bin
 cp config/xmr-stak.service $workdir/squashfs-root/usr/lib/systemd/system
+cp config/dhcp.network $workdir/squashfs-root/etc/systemd/network
 
 # setup rootfs
 cat <<-EOF | $workdir/squashfs-root/bin/arch-chroot $workdir/squashfs-root/ /bin/bash
@@ -94,10 +95,14 @@ cat <<-EOF | $workdir/squashfs-root/bin/arch-chroot $workdir/squashfs-root/ /bin
 	systemctl enable sshd
 	systemctl enable dbus
 	systemctl enable avahi-daemon
+	systemctl enable systemd-networkd
+	systemctl enable systemd-resolved
 	systemctl enable xmr-stak.service
 	
 	# Clear package cache
 	pacman -Scc --noconfirm
+
+	rm /etc/resolve.conf
 	EOF
 
 # Copy authorized_keys
