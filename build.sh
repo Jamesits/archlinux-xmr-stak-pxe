@@ -101,8 +101,6 @@ cat <<-EOF | $workdir/squashfs-root/bin/arch-chroot $workdir/squashfs-root/ /bin
 	
 	# Clear package cache
 	pacman -Scc --noconfirm
-
-	rm /etc/resolve.conf
 	EOF
 
 # Copy authorized_keys
