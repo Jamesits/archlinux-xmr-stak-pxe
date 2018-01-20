@@ -4,7 +4,7 @@ Arch linux image with xmr-stak installed. A PXE-and-mine solution for batch depl
 
 ## Requirements
 
-PXE client need at least 1792GiB RAM. 
+PXE client need at least 1792MiB RAM. 
 
 ## Usage
 
