@@ -29,7 +29,7 @@ Post-compile:
 Ubuntu:
 
 ```shell
-apt-get install p7zip-full squashfs-tools git-core cmake build-essential libmicrohttpd-dev libssl-dev libhwloc-dev
+apt-get install p7zip-full squashfs-tools git-core cmake build-essential libmicrohttpd-dev libssl-dev libhwloc-dev liblzma-dev
 ```
 
 OpenSuSE:
