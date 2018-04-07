@@ -51,6 +51,7 @@ popd
 # build xmr-stak
 pushd $basedir/xmr-stak
 ! git reset --hard
+! git pull
 ! sed -ie "s/2\.0/0\.0/g" xmrstak/donate-level.hpp
 popd
 mkdir -p $workdir/xmr-stak
