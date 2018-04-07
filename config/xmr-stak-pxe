@@ -9,7 +9,13 @@ cd /tmp
 ! rm *.txt
 lscpu -J > lscpu.txt
 ! ( curl -Lf -o config.txt --data "@lscpu.txt" $http_server/config.txt || curl -Lf -o config.txt $http_server/config.txt )
+! ( curl -Lf -o cpu.txt --data "@lscpu.txt" $http_server/pools.txt || curl -Lf -o cpu.txt $http_server/pools.txt )
 ! ( curl -Lf -o cpu.txt --data "@lscpu.txt" $http_server/cpu.txt || curl -Lf -o cpu.txt $http_server/cpu.txt )
+! ( curl -Lf -o cpu.txt --data "@lscpu.txt" $http_server/amd.txt || curl -Lf -o cpu.txt $http_server/amd.txt )
+! ( curl -Lf -o cpu.txt --data "@lscpu.txt" $http_server/nvidia.txt || curl -Lf -o cpu.txt $http_server/nvidia.txt )
 
 [ ! -f config.txt ] && ! cp /etc/xmr-stak/config.txt .
+[ ! -f pools.txt ] && ! cp /etc/xmr-stak/pools.txt .
 [ ! -f cpu.txt ] && ! cp /etc/xmr-stak/cpu.txt .
+[ ! -f amd.txt ] && ! cp /etc/xmr-stak/amd.txt .
+[ ! -f nvidia.txt ] && ! cp /etc/xmr-stak/nvidia.txt .
