@@ -23,7 +23,7 @@ fi
 mkdir -p $workdir
 mkdir -p $output_dir
 
-git submodule update --recursive --remote
+! git submodule update --recursive --remote
 
 # build iPXE
 ! source $basedir/config/pxe.sh
