@@ -37,8 +37,10 @@ cat $workdir/boot.cfg.head $confdir/boot.cfg > $output_dir/boot.cfg
 
 cat > $workdir/ipxe_embed.ipxe <<-EOF
 	#!ipxe
+	
+	:retry
 	prompt --key 0x02 --timeout 2000 Press Ctrl-B to cancel auto boot and launch the iPXE command line... && shell ||
-	dhcp
+	dhcp || goto retry
 	boot ${pxe_script}
 	EOF
 pushd $basedir/ipxe/src
