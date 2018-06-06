@@ -45,9 +45,9 @@ cat > $workdir/ipxe_embed.ipxe <<-EOF
 	EOF
 pushd $basedir/ipxe/src
 ! git reset --hard
-make bin-x86_64-efi/ipxe.efi EMBED=$workdir/ipxe_embed.ipxe
+make -j bin-x86_64-efi/ipxe.efi EMBED=$workdir/ipxe_embed.ipxe
 cp bin-x86_64-efi/ipxe.efi $output_dir/ipxe.efi
-make bin/undionly.kpxe EMBED=$workdir/ipxe_embed.ipxe
+make -j bin/undionly.kpxe EMBED=$workdir/ipxe_embed.ipxe
 cp bin/undionly.kpxe $output_dir/undionly.kpxe
 ! git reset --hard
 popd
@@ -60,7 +60,7 @@ popd
 mkdir -p $workdir/xmr-stak
 pushd $workdir/xmr-stak
 cmake $basedir/xmr-stak -DXMR-STAK_COMPILE=generic -DCMAKE_LINK_STATIC=ON -DCMAKE_BUILD_TYPE=Release -DMICROHTTPD_ENABLE=ON -DOpenSSL_ENABLE=ON -DCPU_ENABLE=ON -DHWLOC_ENABLE=ON -DOpenCL_ENABLE=OFF -DCUDA_ENABLE=OFF
-make
+make -j
 popd
 
 # extract iso
